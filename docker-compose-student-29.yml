@@ -5,14 +5,14 @@ services:
     ports:
       - "3029:3000"
     environment:
-      DB_URL: mongodb://mongo-student-29:27017/CRMdb-student-29
+      DB_URL: mongodb://mongo-student-29:27046/CRMdb-student-29
       PORT: 3000
     depends_on:
       - mongo-student-29
   mongo-student-33:
     image: mongo:latest
     ports:
-      - "27046:27017"
+      - "27050:27046"
     volumes:
       - db-data-student-29:/data/db
 volumes:
