@@ -4,6 +4,30 @@ import routes from './src/routes/userRoutes.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'CRM API',
+            version: '1.0.0',
+            description: 'A simple CRM API',
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+                description: 'Development server',
+            },
+        ],
+    },
+    apis: ['./src/routes/*.js'], // paths to files containing Swagger annotations
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+
+
 dotenv.config();
 
 const app = express();
@@ -42,10 +66,22 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-app.get('/', (req, res) => 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/**
+ * @swagger
+ * /:
+ *  get:
+ *      description: Welcome to swagger-jsondoc!
+ *      responses:
+ *          200:   
+ *              description: Returns a mysterious string.
+ */
+
+app.get('/', (req, res) =>
     res.send(`Node and express server is running on port ${PORT}`)
 );
 
-app.listen(PORT, '0.0.0.0', () => 
+app.listen(PORT, '0.0.0.0', () =>
     console.log(`Your server is running on port ${PORT}`)
 );
