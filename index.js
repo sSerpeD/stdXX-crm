@@ -2,10 +2,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import routes from './src/routes/userRoutes.js';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 // mongoose connection
 mongoose.Promise = global.Promise;
@@ -32,7 +35,14 @@ app.use((req, res, next) => {
 });
 
 
+// Routes
 routes(app);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 app.get('/', (req, res) => 
     res.send(`Node and express server is running on port ${PORT}`)
@@ -41,3 +51,4 @@ app.get('/', (req, res) =>
 app.listen(PORT, '0.0.0.0', () => 
     console.log(`Your server is running on port ${PORT}`)
 );
+
